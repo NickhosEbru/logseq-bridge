@@ -2,30 +2,38 @@
 <html>
 <head>
     <title>Logseq Bridge</title>
-<script>
-    window.onload = function() {
-        // 1. Grab the "loot" (parameters)
-        const urlParams = new URLSearchParams(window.location.search);
-        const page = urlParams.get('page') || 'Incoming';
-        const title = urlParams.get('title') || 'New Entry';
-        const content = urlParams.get('content') || '';
+    <style>
+        body { 
+            background: #111; color: #eee; font-family: sans-serif; 
+            display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; height: 100vh; margin: 0; 
+        }
+        button { 
+            padding: 15px 30px; font-size: 1.2rem; cursor: pointer; 
+            background: #2d81ff; color: white; border: none; border-radius: 8px; 
+        }
+        button:hover { background: #1a66cc; }
+    </style>
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get('page') || 'Incoming';
+            const title = urlParams.get('title') || 'New Entry';
+            const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&title=${encodeURIComponent(title)}`;
 
-        // 2. Build the "bridge" URL
-        const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`;
+            // 1. Try to launch Logseq automatically
+            window.location.href = logseqURI;
 
-        // 3. Launch Logseq
-        window.location.href = logseqURI;
-
-        // 4. The "Vanish" (wait 500ms so the protocol doesn't "choke")
-        setTimeout(function() {
-            window.close();
-            // Fallback: if the tab stays "stubborn," show a message
-            document.body.innerHTML = "<h1>Sent! You can close this tab now, king.</h1>";
-        }, 500);
-    };
-</script>
+            // 2. Try to auto-close after a short "time"
+            setTimeout(() => {
+                window.close();
+            }, 800);
+        };
+    </script>
 </head>
 <body>
-    <p>Redirecting to Logseq... if it stalls, your "link" might be broken.</p>
+    <h2>Sent to Logseq!</h2>
+    <p>If this tab didn't "self-destruct," hit the button:</p>
+    <button onclick="window.close()">Close Tab</button>
 </body>
 </html>
