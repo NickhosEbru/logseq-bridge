@@ -14,22 +14,24 @@
         }
         button:hover { background: #1a66cc; }
     </style>
-    <script>
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const page = urlParams.get('page') || 'Incoming';
-            const title = urlParams.get('title') || 'New Entry';
-            const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&title=${encodeURIComponent(title)}`;
+   <script>
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page') || 'Incoming';
+        const title = urlParams.get('title') || 'New Entry';
+        
+        const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&title=${encodeURIComponent(title)}`;
 
-            // 1. Try to launch Logseq automatically
-            window.location.href = logseqURI;
+        // 1. Launch Logseq
+        window.location.href = logseqURI;
 
-            // 2. Try to auto-close after a short "time"
-            setTimeout(() => {
-                window.close();
-            }, 800);
-        };
-    </script>
+        // 2. The "Fade to Black"
+        // After 500ms, send the browser to a blank page so it's "out of sight"
+        setTimeout(() => {
+            window.location.href = "about:blank";
+        }, 500);
+    };
+</script>
 </head>
 <body>
     <h2>Sent to Logseq!</h2>
