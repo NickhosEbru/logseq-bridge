@@ -14,19 +14,26 @@
         }
         button:hover { background: #1a66cc; }
     </style>
-   <script>
+<script>
     window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const page = urlParams.get('page') || 'Incoming';
-        const title = urlParams.get('title') || 'New Entry';
+        // 1. Grab everything: the ? part AND the # part
+        const fullSearch = window.location.search;
+        const fullHash = window.location.hash;
         
-        const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&title=${encodeURIComponent(title)}`;
+        // 2. Combine them so we don't "miss" anything
+        // This treats everything after the ? as one big data pool
+        const combinedParams = new URLSearchParams(fullSearch + fullHash.replace('#', '&'));
 
-        // 1. Launch Logseq
+        const page = combinedParams.get('page') || 'Incoming';
+        const title = combinedParams.get('title') || 'New Entry';
+        const content = combinedParams.get('content') || '';
+
+        // 3. Build the Logseq "handshake"
+        const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`;
+
+        // 4. Launch and "Vanish"
         window.location.href = logseqURI;
-
-        // 2. The "Fade to Black"
-        // After 500ms, send the browser to a blank page so it's "out of sight"
+        
         setTimeout(() => {
             window.location.href = "about:blank";
         }, 500);
