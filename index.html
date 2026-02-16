@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logseq Bridge</title>
+    <script>
+        window.onload = function() {
+            // Grab the "baggage" from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Map YOUR program's parameters to Logseq's
+            // Change 'title' or 'page' below to match what your tool sends!
+            const page = urlParams.get('page') || 'Incoming';
+            const title = urlParams.get('title') || 'New Entry';
+            const content = urlParams.get('content') || '';
+
+            // Construct the local Logseq "handshake"
+            const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`;
+
+            // Launch Logseq
+            window.location.replace(logseqURI);
+        };
+    </script>
+</head>
+<body>
+    <p>Redirecting to Logseq... if it stalls, your "link" might be broken.</p>
+</body>
+</html>
