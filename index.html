@@ -17,24 +17,26 @@
 <script>
     window.onload = function() {
         const params = new URLSearchParams(window.location.search);
-
-        // 1. Get the data for Logseq
         const page = params.get('page') || 'TODAY';
         const content = params.get('content') || '';
 
-        // 2. The "Detective" Logic: 
-        // This looks for the value after 'caller=' in your URL
-        const callerValue = params.get('caller') || ''; 
-        const cleanNumber = callerValue.replace(/\D/g, '');
+        // 1. THE "TARGETED" HUNT:
+        // We look for everything AFTER #CALLS and find the next #
+        // ([^ ]+) captures everything until the next space
+        const secondaryHashMatch = content.match(/#CALLS.*#([^ ]+)/i);
+        let extractedValue = secondaryHashMatch ? secondaryHashMatch[1] : "";
 
-        // 3. Fire off to Logseq
+        // 2. THE "NUMERIC" FILTER:
+        // Strip the # or any trailing punctuation to get just the digits
+        const cleanNumber = extractedValue.replace(/\D/g, '');
+
+        // 3. Fire to Logseq
         const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&content=${encodeURIComponent(content)}`;
         window.location.href = logseqURI;
 
-        // 4. The 1881 "Pivot"
+        // 4. The Pivot to 1881
         setTimeout(() => {
             if (cleanNumber) {
-                // Takes the real number and searches 1881
                 window.location.href = `https://www.1881.no/?query=${cleanNumber}`;
             } else {
                 window.location.href = "https://www.1881.no";
