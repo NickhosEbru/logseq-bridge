@@ -20,21 +20,17 @@
         const page = params.get('page') || 'TODAY';
         const content = params.get('content') || '';
 
-        // 1. THE "TARGETED" HUNT:
-        // We look for everything AFTER #CALLS and find the next #
-        // ([^ ]+) captures everything until the next space
-        const secondaryHashMatch = content.match(/#CALLS.*#([^ ]+)/i);
-        let extractedValue = secondaryHashMatch ? secondaryHashMatch[1] : "";
+        // 1. THE "FLEXIBLE" HUNT:
+        // We look for #CALLS or %23CALLS.
+        // Then we look for the next # or %23 and grab the digits after it.
+        const match = content.match(/(?:#|%23)CALLS.*?(?:#|%23)(\d+)/is);
+        const cleanNumber = match ? match[1] : "";
 
-        // 2. THE "NUMERIC" FILTER:
-        // Strip the # or any trailing punctuation to get just the digits
-        const cleanNumber = extractedValue.replace(/\D/g, '');
-
-        // 3. Fire to Logseq
+        // 2. Fire to Logseq
         const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&content=${encodeURIComponent(content)}`;
         window.location.href = logseqURI;
 
-        // 4. The Pivot to 1881
+        // 3. The Pivot to 1881
         setTimeout(() => {
             if (cleanNumber) {
                 window.location.href = `https://www.1881.no/?query=${cleanNumber}`;
