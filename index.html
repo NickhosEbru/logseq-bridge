@@ -16,27 +16,30 @@
     </style>
 <script>
     window.onload = function() {
-        // 1. Grab everything: the ? part AND the # part
-        const fullSearch = window.location.search;
-        const fullHash = window.location.hash;
-        
-        // 2. Combine them so we don't "miss" anything
-        // This treats everything after the ? as one big data pool
-        const combinedParams = new URLSearchParams(fullSearch + fullHash.replace('#', '&'));
+        const params = new URLSearchParams(window.location.search);
 
-        const page = combinedParams.get('page') || 'Incoming';
-        const title = combinedParams.get('title') || 'New Entry';
-        const content = combinedParams.get('content') || '';
+        // 1. Get the data for Logseq
+        const page = params.get('page') || 'TODAY';
+        const content = params.get('content') || '';
 
-        // 3. Build the Logseq "handshake"
-        const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`;
+        // 2. The "Detective" Logic: 
+        // This looks for the value after 'caller=' in your URL
+        const callerValue = params.get('caller') || ''; 
+        const cleanNumber = callerValue.replace(/\D/g, '');
 
-        // 4. Launch and "Vanish"
+        // 3. Fire off to Logseq
+        const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&content=${encodeURIComponent(content)}`;
         window.location.href = logseqURI;
-        
+
+        // 4. The 1881 "Pivot"
         setTimeout(() => {
-            window.location.href = "about:blank";
-        }, 500);
+            if (cleanNumber) {
+                // Takes the real number and searches 1881
+                window.location.href = `https://www.1881.no/?query=${cleanNumber}`;
+            } else {
+                window.location.href = "https://www.1881.no";
+            }
+        }, 800);
     };
 </script>
 </head>
