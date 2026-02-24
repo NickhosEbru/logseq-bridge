@@ -19,6 +19,7 @@
         const params = new URLSearchParams(window.location.search);
         const page = params.get('page') || 'TODAY';
         const content = params.get('content') || '';
+        const append = params.get('append') || 'false';
 
         // 1. THE "FLEXIBLE" HUNT:
         // We look for #CALLS or %23CALLS.
@@ -27,7 +28,7 @@
         const cleanNumber = match ? match[1] : "";
 
         // 2. Fire to Logseq
-        const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&content=${encodeURIComponent(content)}`;
+        const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&append=${append}&content=${encodeURIComponent(content)}`;
         window.location.href = logseqURI;
 
         // 3. The Pivot to 1881
