@@ -28,9 +28,8 @@
         const cleanNumber = match ? match[1] : "";
 
         // 2. Fire to Logseq
-        const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&append=${append}&content=${encodeURIComponent(content)}`;
-        window.location.href = logseqURI;
-
+        const logseqURI = `logseq://x-callback-url/capture?page=${encodeURIComponent(page)}&append=${append}&content=${encodeURIComponent(content)}`;
+        
         // 3. The Pivot to 1881
         setTimeout(() => {
             if (cleanNumber) {
