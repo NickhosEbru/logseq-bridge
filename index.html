@@ -17,20 +17,24 @@
 <script>
     window.onload = function() {
         const params = new URLSearchParams(window.location.search);
+
+        // 1. Grab all the "ingredients" from your URL
         const page = params.get('page') || 'TODAY';
         const content = params.get('content') || '';
-        const append = params.get('append') || 'true';
+        const append = params.get('append') || 'false'; // This is the new "top" priority
 
-        // 1. THE "FLEXIBLE" HUNT:
-        // We look for #CALLS or %23CALLS.
-        // Then we look for the next # or %23 and grab the digits after it.
+        // 2. The "Search" Logic (skipping #CALLS to find the number)
         const match = content.match(/(?:#|%23)CALLS.*?(?:#|%23)(\d+)/is);
         const cleanNumber = match ? match[1] : "";
 
-        // 2. Fire to Logseq
-        const logseqURI = `logseq://x-callback-url/capture?page=${encodeURIComponent(page)}&append=${append}&content=${encodeURIComponent(content)}`;
+        // 3. Construct the "Command" for Logseq
+        // Notice we added &append= here!
+        const logseqURI = `logseq://x-callback-url/quickCapture?page=${encodeURIComponent(page)}&append=${append}&content=${encodeURIComponent(content)}`;
         
-        // 3. The Pivot to 1881
+        // 4. Execute the "Jump" to Logseq
+        window.location.href = logseqURI;
+
+        // 5. Pivot to 1881
         setTimeout(() => {
             if (cleanNumber) {
                 window.location.href = `https://www.1881.no/?query=${cleanNumber}`;
